@@ -85,7 +85,7 @@ class Theme:
         digits = len(str(len(contents)))
 
         if os.path.isdir(self.buildDirectory):
-            ui.line('[{}] Cleaning Build Folder'.format('.' * (digits * 2 + 1)), type='info', pre=' - ')
+            ui.line('[{}] Cleaning Build Folder'.format('.' * (digits * 2 + 1)), pre=' - ')
             tools.rmdir(self.buildDirectory)
         os.mkdir(self.buildDirectory)        
 
@@ -105,15 +105,15 @@ class Theme:
                     ui.line('Copying File: {}'.format(path))
                     shutil.copy(realpath, self.buildDirectory)
 
-        ui.line('[{}] Compiling Theme Package'.format('.' * (digits * 2 + 1)), type='info', pre=' - ')
+        ui.line('[{}] Compiling Theme Package'.format('.' * (digits * 2 + 1)), pre=' - ')
         tools.mkzip(self.buildDirectory, dest)
-        ui.table ([[ui.text['success']('- Build  Finished -')], [dest]], padding=5)
+        ui.table ([['- Build  Finished -'], [dest]], padding=5)
 
     def unpack(self, file):
         self.load()
         ui.table([['-- Unpacking Theme --'], [file]], padding=5)
 
-        ui.line('Unpacking Theme Package', type='info', pre=' - ')
+        ui.line('Unpacking Theme Package', pre=' - ')
         if self.tempDirectory.exists():
             tools.rmdir(self.tempDirectory)
         tools.unzip(file, self.tempDirectory)
@@ -129,10 +129,10 @@ class Theme:
                 tools.unzip(scrap, self.tempDirectory.joinpath(path))
                 os.unlink(scrap)
 
-        ui.line('Moving to Working Directory'.format(path), type='warn', pre=' - ')
+        ui.line('Moving to Working Directory'.format(path), pre=' - ')
         if self.workingDirectory.exists():
             tools.rmdir(self.workingDirectory)
         self.tempDirectory.rename(self.workingDirectory)
 
-        ui.table([[ui.text['success']('- Unpacking Finished -')], [self.workingDirectory]], padding=3)
+        ui.table(['- Unpacking Finished -'], [self.workingDirectory]], padding=3)
                 

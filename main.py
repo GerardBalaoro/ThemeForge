@@ -1,8 +1,6 @@
 """ThemeForge Executable Script
 """
-
-
-from core import *
+from engine import *
 import ui, tools
 
 if __name__ == '__main__':
