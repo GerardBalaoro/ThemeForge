@@ -18,7 +18,7 @@ ThemeForge [-h] [-b OUTPUT FILE PATH] [-u SOURCE FILE PATH] PATH
   - unpack a compiled theme from specified file path
 
 
-## Package Configuration
+### Package Configuration
 
 The application builds and unpacks theme packages based on the configuration inside the **forge.json** file, which is created whenever it is initialized.
 

@@ -36,8 +36,9 @@ def line(message, end='\n', type='normal', pre=''):
     return print(pre + text[type](message), end=end)
 
 def title():
-     ui.table([
+    global text
+    table([
         ['THEMEFORGE'],
-        [ui.text['info']('Theme Compiler for Android-Based Operating Systems')],
+        [text['info']('Theme Compiler for Android-Based Operating Systems')],
         ['by: Gerard Balaoro']
     ])

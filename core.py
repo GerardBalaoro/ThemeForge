@@ -29,9 +29,9 @@ class Theme:
     def __init__(self, path):
         path = Path(path)
         if path.exists():
-            if path.isfile():
+            if path.is_file():
                 self.root = path.parent.resolve()
-            elif path.isdir():
+            elif path.is_dir():
                 self.root = path.resolve()
             self.load()
         self.save()
