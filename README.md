@@ -25,23 +25,23 @@ The application builds and unpacks theme packages based on the configuration ins
 ```json
 {
    "workspace": {
-		"build": "build",
-		"working": "theme",
-		"temp": ".temp"
-	},
-	"engine": {
-		"compress": [
-			"com.android.*",
-			"com.bbm.*",
-			"com.vivo.*",
-			"com.huawei.*",
-			"framework-*",
-			"com.bbk.*"
-		],
-		"ignore": [
-			".*"
-		]
-	}
+      "build": "build",
+      "working": "theme",
+      "temp": ".temp"
+   },
+   "engine": {
+      "compress": [
+         "com.android.*",
+         "com.bbm.*",
+         "com.vivo.*",
+         "com.huawei.*",
+         "framework-*",
+         "com.bbk.*"
+      ],
+      "ignore": [
+         ".*"
+      ]
+   }
 }
 ```
 
