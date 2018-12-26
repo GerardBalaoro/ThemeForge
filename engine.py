@@ -126,13 +126,19 @@ class Theme:
                 ui.line('Unpacking Asset: {}'.format(path), pre=' - ')
                 scrap = realpath.with_suffix('.scrap')
                 os.rename(realpath, scrap)
-                tools.unzip(scrap, self.tempDirectory.joinpath(path))
-                os.unlink(scrap)
+                try:
+                	tools.unzip(scrap, self.tempDirectory.joinpath(path))
+                	os.unlink(scrap)
+                except:
+                	if os.path.exists(realpath):
+                		tools.rmdir(realpath)
+                	ui.line('Failed to Unpack: {}'.format(path), pre=' - ')
+                	os.rename(scrap, realpath)
 
         ui.line('Moving to Working Directory'.format(path), pre=' - ')
         if self.workingDirectory.exists():
             tools.rmdir(self.workingDirectory)
         self.tempDirectory.rename(self.workingDirectory)
 
-        ui.table(['- Unpacking Finished -'], [self.workingDirectory]], padding=3)
+        ui.table([['- Unpacking Finished -'], [self.workingDirectory]], padding=3)
                 
