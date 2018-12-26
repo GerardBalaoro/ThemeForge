@@ -14,12 +14,12 @@ if __name__ == '__main__':
     
     args = parser.parse_args()
 
-    try:
-        theme = Theme(args.path)
+    # try:
+    theme = Theme(args.path) 
 
-        if args.build is not None:
-            theme.build(os.path.realpath(args.build))
-        elif args.unpack is not None:
-            theme.unpack(os.path.realpath(args.unpack))
-    except Exception as e:
-        print('Error: {}'.format(e))
+    if args.build is not None:
+        theme.build(os.path.realpath(args.build))
+    elif args.unpack is not None:
+        theme.unpack(os.path.realpath(args.unpack))
+    # except Exception as e:
+    #     print('Error: {}'.format(e))

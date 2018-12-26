@@ -1,23 +1,6 @@
 """Console Output Helpers
 """
-import sys
-
-class ProgressBar:
-
-    def __init__(self, total=100, length=25, fill='#'):
-        self.total = total
-        self.length = length
-        self.fill = fill
-
-    def update(self, label, value):
-        progress = value / self.total
-        blocks = int(round(self.length * progress))
-        msg = "\r{0}: [{1}] {2}%".format(label, self.fill * blocks + "-" * (self.length - blocks), round(progress * 100, 2))
-        if progress >= 1: msg += " DONE\r\n"
-        sys.stdout.write(msg)
-        sys.stdout.flush()
-
-def line(message, end='\n', pre=''):
+def line(message, end='\n', pre=' - '):
     return print(pre + message, end=end)
 
 def title():

@@ -30,7 +30,7 @@ The application builds and unpacks theme packages based on the configuration ins
       "temp": ".temp"
    },
    "engine": {
-      "compress": [
+      "zip": [
          "com.android.*",
          "com.bbm.*",
          "com.vivo.*",
@@ -40,7 +40,10 @@ The application builds and unpacks theme packages based on the configuration ins
       ],
       "ignore": [
          ".*"
-      ]
+      ],
+      "compression":
+         "method": "default",
+         "command": "7z a -tzip -m0=lzma -mx=9 {dest} {src}"
    }
 }
 ```
@@ -54,14 +57,20 @@ Each node represents a directory that the application uses. All values must be a
 ### Engine Settings
 
 
-- **`compress`**
+- **`zip`**
   - folders that match this pattern are compressed to zip format
   
 - **`ignore`**
   - files and folders that match this pattern are not included in the theme package
+  
+- **`compression`**
+  - method to be used when compressing files, changing **`"method": "command"`** will execute the defined value in **command** key. `dest` and `src` will be automatically replaced.
 
 
 ## Running from Source
+
+> **NOTE:** 
+> This script uses the **Python 3.7** ZipFile library which supports compression levels.
 
 - Clone or download the latest version
 
@@ -87,14 +96,14 @@ Each node represents a directory that the application uses. All values must be a
 - Windows
 
   ```
-  pyinstaller server.py -F -y -i icons/win.ico --name "ThemeForge"
+  pyinstaller server.py -F -i icons/win.ico --name "ThemeForge"
   ```
 
 
 - MacOS
 
   ```
-  pyinstaller server.py -F -y -i icons/mac.icns --name "ThemeForge"
+  pyinstaller server.py -F -i icons/mac.icns --name "ThemeForge"
   ```
 
 
