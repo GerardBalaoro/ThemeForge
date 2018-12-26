@@ -1,36 +1,29 @@
 """Console Output Helpers
 """
-import terminaltables as tb
+import sys
 
-def banner(text, table=tb.DoubleTable, end='\n', align=['center'], padding=1):
-    _banner = table([[text]])
-    _banner.inner_heading_row_border = False
-    _banner.inner_row_border = True
-    _banner.padding_left = padding
-    _banner.padding_right = padding
-    for i, v in enumerate(align):
-        _banner.justify_columns[i] = v
-        
-    return print(_banner.table, end=end)
+class ProgressBar:
 
-def table(data, table=tb.DoubleTable, end='\n', align=['center'], padding=1):
-    _table = table(data)
-    _table.padding_left = padding
-    _table.padding_right = padding
-    for i, v in enumerate(align):
-        _table.justify_columns[i] = v
-        
-    return print(_table.table, end=end)
+    def __init__(self, total=100, length=25, fill='#'):
+        self.total = total
+        self.length = length
+        self.fill = fill
+
+    def update(self, label, value):
+        progress = value / self.total
+        blocks = int(round(self.length * progress))
+        msg = "\r{0}: [{1}] {2}%".format(label, self.fill * blocks + "-" * (self.length - blocks), round(progress * 100, 2))
+        if progress >= 1: msg += " DONE\r\n"
+        sys.stdout.write(msg)
+        sys.stdout.flush()
 
 def line(message, end='\n', pre=''):
     return print(pre + message, end=end)
 
 def title():
-    table([
-        ['THEMEFORGE'],
-        ['Theme Compiler for Android-Based Operating Systems'],
-        ['by: Gerard Balaoro']
-    ])
+    block('Theme Compiler for Android-Based Operating Systems\n'
+        'by: Gerard Balaoro',
+        title='THEMEFORGE')
 
 def block(contents, title='', padding=1):
     hline = chr(9552)
@@ -43,10 +36,25 @@ def block(contents, title='', padding=1):
     cor_ml = chr(9568)
 
     lines = []
-    if isinstance(contents, str):
+    if not isinstance(contents, list):
+        contents = str(contents)
         contents = contents.split('\n')
 
-    size = len(max(title, max(contents, key=len), len))
+    def mkline(text, size, l, r):
+        return l + text.center(size) + r
 
-    lines.append()
+    size = len(max(title, max(contents, key=len), key=len)) + padding * 2
+
+    lines.append(mkline(hline * size, size, cor_ul, cor_ur))
+
+    if len(title):
+        lines.append(mkline(title, size, vline, vline))
+        lines.append(mkline(hline * size, size, cor_ml, cor_mr))
+
+    for line in contents:
+        lines.append(mkline(line, size, vline, vline))
+        
+    lines.append(mkline(hline * size, size, cor_dl, cor_dr))
+    print('\n'.join(lines))
+
 

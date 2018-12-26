@@ -3,13 +3,12 @@ import shutil, ui, tools
 from pathlib import Path
 
 class Theme:
-
     root = ''
     config = {
         'workspace': {
             'build': 'build',
-            'working': 'theme',
-            'temp': '.temp',
+            'source': 'theme',
+            'cache': '.cache',
         },
         'engine': {
             'compress': [
@@ -28,18 +27,23 @@ class Theme:
     
     def __init__(self, path):
         path = Path(path)
-        if path.exists():
-            if path.is_file():
-                self.root = path.parent.resolve()
-            elif path.is_dir():
-                self.root = path.resolve()
-            self.load()
+        if not path.exists():
+            if path.is_dir():
+                os.mkdir(path)
+            else:
+                raise FileNotFoundError('The file {} cannot be found.'.format(path))
+
+        if path.is_file():
+            self.root = path.parent.resolve()
+        elif path.is_dir():
+            self.root = path.resolve()
+        self.load()
         self.save()
         ui.title()
 
     @property
-    def workingDirectory(self):
-        path = Path(self.config['workspace']['working'])
+    def sourceDirectory(self):
+        path = Path(self.config['workspace']['source'])
         if path.is_absolute():
             return path
         else:
@@ -55,8 +59,8 @@ class Theme:
             return Path(self.root).joinpath(path)
 
     @property
-    def tempDirectory(self):
-        path = Path(self.config['workspace']['temp'])
+    def cacheDirectory(self):
+        path = Path(self.config['workspace']['cache'])
         if path.is_absolute():
             return path
         else:
@@ -79,19 +83,19 @@ class Theme:
     
     def build(self, dest):
         self.load()
-        ui.table ([['- Build  Finished -'], [self.workingDirectory]], padding=5)
+        ui.block(self.sourceDirectory, 'Build Finished', padding=5)
 
-        contents = os.listdir(self.workingDirectory)
+        contents = os.listdir(self.sourceDirectory)
         digits = len(str(len(contents)))
 
         if os.path.isdir(self.buildDirectory):
             ui.line('[{}] Cleaning Build Folder'.format('.' * (digits * 2 + 1)), pre=' - ')
             tools.rmdir(self.buildDirectory)
-        os.mkdir(self.buildDirectory)        
+        os.mkdir(self.buildDirectory)
 
         for i, path in enumerate(contents):
             if [fnmatch.fnmatch(path, pat) for pat in self.config['engine']['ignore']].count(True) == 0:
-                realpath = self.workingDirectory.joinpath(path)
+                realpath = self.sourceDirectory.joinpath(path)
                 ui.line('[{}/{}]'.format(str(i + 1).zfill(digits), len(contents)), end=' ', pre=' - ')
 
                 if os.path.isdir(realpath):
@@ -107,27 +111,27 @@ class Theme:
 
         ui.line('[{}] Compiling Theme Package'.format('.' * (digits * 2 + 1)), pre=' - ')
         tools.mkzip(self.buildDirectory, dest)
-        ui.table ([['- Build  Finished -'], [dest]], padding=5)
+        ui.block(dest, 'Build Finished', padding=5)
 
     def unpack(self, file):
         self.load()
-        ui.table([['-- Unpacking Theme --'], [file]], padding=5)
+        ui.block(file, 'Unpacking Theme', padding=5)
 
         ui.line('Unpacking Theme Package', pre=' - ')
-        if self.tempDirectory.exists():
-            tools.rmdir(self.tempDirectory)
-        tools.unzip(file, self.tempDirectory)
+        if self.cacheDirectory.exists():
+            tools.rmdir(self.cacheDirectory)
+        tools.unzip(file, self.cacheDirectory)
 
-        contents = os.listdir(self.tempDirectory)
+        contents = os.listdir(self.cacheDirectory)
         for i, path in enumerate(contents):
-            realpath = self.tempDirectory.joinpath(path)
+            realpath = self.cacheDirectory.joinpath(path)
 
             if os.path.isfile(realpath) and [fnmatch.fnmatch(path, pat) for pat in self.config['engine']['compress']].count(True):
                 ui.line('Unpacking Asset: {}'.format(path), pre=' - ')
                 scrap = realpath.with_suffix('.scrap')
                 os.rename(realpath, scrap)
                 try:
-                	tools.unzip(scrap, self.tempDirectory.joinpath(path))
+                	tools.unzip(scrap, self.cacheDirectory.joinpath(path))
                 	os.unlink(scrap)
                 except:
                 	if os.path.exists(realpath):
@@ -136,9 +140,8 @@ class Theme:
                 	os.rename(scrap, realpath)
 
         ui.line('Moving to Working Directory'.format(path), pre=' - ')
-        if self.workingDirectory.exists():
-            tools.rmdir(self.workingDirectory)
-        self.tempDirectory.rename(self.workingDirectory)
+        if self.sourceDirectory.exists():
+            tools.rmdir(self.sourceDirectory)
+        self.cacheDirectory.rename(self.sourceDirectory)
 
-        ui.table([['- Unpacking Finished -'], [self.workingDirectory]], padding=3)
-                
+        ui.block(self.sourceDirectory, 'Unpacking Finished')
