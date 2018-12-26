@@ -41,9 +41,10 @@ The application builds and unpacks theme packages based on the configuration ins
       "ignore": [
          ".*"
       ],
-      "compression":
+      "compression": {
          "method": "default",
          "command": "7z a -tzip -m0=lzma -mx=9 {dest} {src}"
+      }
    }
 }
 ```
@@ -55,7 +56,6 @@ Each node represents a directory that the application uses. All values must be a
 
 
 ### Engine Settings
-
 
 - **`zip`**
   - folders that match this pattern are compressed to zip format
@@ -71,6 +71,7 @@ Each node represents a directory that the application uses. All values must be a
 
 > **NOTE:** 
 > This script uses the **Python 3.7** ZipFile library which supports compression levels.
+
 
 - Clone or download the latest version
 
