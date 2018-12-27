@@ -88,23 +88,28 @@ Each node represents a directory that the application uses. All values must be a
 - Execute entry script.
 
 	```
-	python main.py -h
+	python forge.py -h
 	```
 
 
 ## Building Binaries Using PyInstaller
 
+- Intall PyInstaller
+
+  ```
+  pip install pyinstaller
+  ```
+  
 - Windows
 
   ```
-  pyinstaller server.py -F -i icons/win.ico --name "ThemeForge"
+  pyinstaller forge.py -F -i icons/win.ico --name "ThemeForge"
   ```
-
 
 - MacOS
 
   ```
-  pyinstaller server.py -F -i icons/mac.icns --name "ThemeForge"
+  pyinstaller forge.py -F -i icons/mac.icns --name "ThemeForge"
   ```
 
 
